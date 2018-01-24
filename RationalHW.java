@@ -7,6 +7,8 @@ public class RationalHW {
 		Rational c = new Rational(1, 3);
 		Rational d = new Rational(1, 2);
 
+		System.out.println(c.add(d)); // 1/3 + 1/2 = 5/6
+		System.out.println(c.sub(d)); // 1/3 - 1/2 = -1/6
 		System.out.println(c.mul(d)); // 1/3 * 1/2 = 1/6
 		System.out.println(c.div(d)); // 1/3 / 1/2 = 2/3
 	}
@@ -31,6 +33,7 @@ class Complex {
 }
 
 class Rational {
+
 	private int num;
 	private int den;
 
@@ -39,17 +42,30 @@ class Rational {
 		this.den = den;
 	}
 
+	public Rational add(Rational other){
+		int numSum = (num * other.den) + (other.num * den);
+		return new Rational(numSum, den * other.den);
+	}
+
+	private Rational neg(){
+		return new Rational(-num, den);
+	}
+
+	public Rational sub(Rational other){
+		return add(other.neg());
+	}
+
 	public Rational mul(Rational other){
 		return new Rational(num * other.num, den * other.den);
 	}
 
 	public Rational div(Rational other){
 		Rational otherInv = other.inv();
-		return new Rational(num * otherInv.num, den * otherInv.den);
+		return mul(otherInv);
+		// return new Rational(num * otherInv.num, den * otherInv.den);
 	}
 
-	// should be private
-	public Rational inv(){
+	private Rational inv(){
 		return new Rational(den, num);
 	}
 
