@@ -1,8 +1,10 @@
 public class RationalHW {
 	public static void main(String[] args){
-
-		Complex a = new Complex(2.0, 3.0);
-		Complex b = new Complex(1.0, 2.0);
+		Rational a = new Rational(7, 3);
+		Rational b = new Rational(2, 3);
+		Rational ab = a.add(b);
+		System.out.println(ab); // 9/3
+		System.out.println(ab.simplify()); // 3
 
 		Rational c = new Rational(1, 3);
 		Rational d = new Rational(1, 2);
@@ -11,24 +13,7 @@ public class RationalHW {
 		System.out.println(c.sub(d)); // 1/3 - 1/2 = -1/6
 		System.out.println(c.mul(d)); // 1/3 * 1/2 = 1/6
 		System.out.println(c.div(d)); // 1/3 / 1/2 = 2/3
-	}
-}
 
-class Complex {
-	private double real;
-	private double imag;
-
-	public Complex(double real, double imag){
-		this.real = real;
-		this.imag = imag;
-	}
-
-	public Complex add(Complex other){
-		return new Complex(real + other.real, imag + other.imag);
-	}
-
-	public String toString(){
-		return "(" + real + " + " + imag + "i)";
 	}
 }
 
@@ -43,8 +28,12 @@ class Rational {
 	}
 
 	public Rational add(Rational other){
-		int numSum = (num * other.den) + (other.num * den);
-		return new Rational(numSum, den * other.den);
+		if (den != other.den){
+			int numSum = (num * other.den) + (other.num * den);
+			return new Rational(numSum, den * other.den);
+		} else {
+			return new Rational(num + other.num, den);
+		}
 	}
 
 	private Rational neg(){
@@ -60,25 +49,34 @@ class Rational {
 	}
 
 	public Rational div(Rational other){
-		Rational otherInv = other.inv();
-		return mul(otherInv);
-		// return new Rational(num * otherInv.num, den * otherInv.den);
+		return mul(other.inv());
 	}
 
 	private Rational inv(){
 		return new Rational(den, num);
 	}
 
+	public int gcd(){
+		int m = this.num;
+		int n = this.den;
+		while(n != 0){
+			int r = m % n;
+			m = n;
+			n = r;
+		}
+		return m;
+	}
+
+	public Rational simplify(){
+		int gcd = gcd();
+		return new Rational(num / gcd, den / gcd);
+	}
+
 	public String toString(){
-		return num + "/" + den;
+		if (den == 1){
+			return Integer.toString(num);
+		} else {
+			return num + "/" + den;
+		}
 	}
 }
-
-/*
-gcd(m, n):
-while n != 0:
-	r = m mod n
-	m = n
-	n = r
-return m
-*/
